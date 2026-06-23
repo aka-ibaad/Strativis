@@ -181,11 +181,63 @@ export default function HomePage() {
   const [email, setEmail] = useState('');
   const [joined, setJoined] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const handler = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handler, { passive: true });
     return () => window.removeEventListener('scroll', handler);
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.preload = 'auto';
+
+    let targetTime = 0;
+    let currentTime = 0;
+    let frameId = 0;
+
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollHeight <= 0) return;
+      const scrollFraction = window.scrollY / scrollHeight;
+      if (video.duration) {
+        targetTime = scrollFraction * video.duration;
+      }
+    };
+
+    const updateVideoTime = () => {
+      // Lerp logic for frame-by-frame smoothing
+      currentTime += (targetTime - currentTime) * 0.08;
+      if (video.duration) {
+        const clampedTime = Math.max(0, Math.min(video.duration - 0.02, currentTime));
+        video.currentTime = clampedTime;
+      }
+      frameId = requestAnimationFrame(updateVideoTime);
+    };
+
+    const handleLoadedMetadata = () => {
+      handleScroll();
+    };
+
+    video.addEventListener('loadedmetadata', handleLoadedMetadata);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+    
+    if (video.duration) {
+      handleScroll();
+    }
+    
+    frameId = requestAnimationFrame(updateVideoTime);
+
+    return () => {
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+      cancelAnimationFrame(frameId);
+    };
   }, []);
 
   const handleJoin = (e: React.FormEvent) => {
@@ -271,49 +323,53 @@ export default function HomePage() {
   ];
 
   return (
-    <div style={{ background: '#030712', minHeight: '100vh', overflowX: 'hidden' }}>
+    <div style={{ background: '#030712', minHeight: '100vh', overflowX: 'hidden', position: 'relative' }}>
 
-      {/* ════════════════════════════════════════════════════════════ */}
-      {/* HERO                                                         */}
-      {/* ════════════════════════════════════════════════════════════ */}
-      <section
-        id="home"
+      {/* Fixed Background Video (linked to scroll) */}
+      <video
+        ref={videoRef}
+        muted
+        playsInline
+        preload="auto"
         style={{
-          position: 'relative',
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-          paddingTop: 80,
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          objectFit: 'cover',
+          zIndex: 1,
+          opacity: 0.16,
+          pointerEvents: 'none',
         }}
       >
-        {/* Background Video */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
+        <source src="/A_premium_slow_moving_abstrac.mp4" type="video/mp4" />
+      </video>
+
+      {/* Page Content wrapper */}
+      <div style={{ position: 'relative', zIndex: 10 }}>
+
+        {/* ════════════════════════════════════════════════════════════ */}
+        {/* HERO                                                         */}
+        {/* ════════════════════════════════════════════════════════════ */}
+        <section
+          id="home"
           style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            zIndex: 0,
-            opacity: 0.3,
-            pointerEvents: 'none',
+            position: 'relative',
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+            paddingTop: 80,
           }}
         >
-          <source src="/A_premium_slow_moving_abstrac.mp4" type="video/mp4" />
-        </video>
-        {/* Animated gradient orbs */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'radial-gradient(ellipse 80% 60% at 50% -10%, rgba(99,102,241,0.18) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 80% 80%, rgba(16,185,129,0.12) 0%, transparent 60%)',
-          pointerEvents: 'none',
-        }} />
+          {/* Animated gradient orbs */}
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'radial-gradient(ellipse 80% 60% at 50% -10%, rgba(99,102,241,0.18) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 80% 80%, rgba(16,185,129,0.12) 0%, transparent 60%)',
+            pointerEvents: 'none',
+          }} />
 
         {/* Moving grid overlay */}
         <div style={{
@@ -924,6 +980,7 @@ export default function HomePage() {
         </motion.div>
       </Section>
 
+      </div>
     </div>
   );
 }
