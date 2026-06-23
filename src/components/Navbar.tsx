@@ -58,20 +58,28 @@ export default function Navbar() {
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 style={{
-                  width: 36, height: 36,
-                  background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                  borderRadius: '10px',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  boxShadow: '0 0 20px rgba(99, 102, 241, 0.4)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '5px',
                 }}
               >
-                <Zap size={18} color="#fff" fill="#fff" />
+                <div style={{ display: 'flex', gap: '5px' }}>
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#f8fafc' }} />
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#f8fafc' }} />
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#f8fafc' }} />
+                </div>
+                <span style={{
+                  fontSize: '13px',
+                  fontWeight: 900,
+                  letterSpacing: '0.2em',
+                  color: '#f8fafc',
+                  textTransform: 'uppercase',
+                  lineHeight: 1,
+                  marginRight: '-0.2em',
+                }}>Strativis</span>
               </motion.div>
-              <span style={{
-                fontSize: '20px', fontWeight: 800, letterSpacing: '-0.02em',
-                background: 'linear-gradient(135deg, #f8fafc, #94a3b8)',
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-              }}>Strativis</span>
             </Link>
 
             {/* Desktop Nav */}

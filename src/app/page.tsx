@@ -412,19 +412,29 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              fontSize: 'clamp(36px,6.5vw,80px)',
-              fontWeight: 900,
-              lineHeight: 1.08,
+              lineHeight: 1.1,
               letterSpacing: '-0.04em',
               marginBottom: 28,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '12px',
             }}
           >
-            <span style={{ color: '#f8fafc' }}>STRATIVIS:</span>{' '}
+            <span style={{ 
+              color: '#f8fafc',
+              fontSize: 'clamp(38px, 6.8vw, 84px)',
+              fontWeight: 900,
+            }}>
+              STRATIVIS
+            </span>
             <span style={{
               background: 'linear-gradient(135deg,#6366f1 0%,#8b5cf6 40%,#10b981 100%)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+              fontSize: 'clamp(32px, 5.8vw, 72px)',
+              fontWeight: 900,
             }}>
-              Fractional HR<br />&amp; Talent Delivery
+              Fractional HR &amp; Talent Delivery
             </span>
           </motion.h1>
 
