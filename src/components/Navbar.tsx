@@ -79,7 +79,7 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Nav */}
-            <nav style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="hidden md:flex">
+            <nav style={{ display: 'flex', alignItems: 'center', gap: '14px' }} className="hidden md:flex">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (
@@ -87,8 +87,8 @@ export default function Navbar() {
                     <motion.div
                       whileHover={{ y: -1, background: 'rgba(255, 255, 255, 0.1)', borderColor: 'rgba(255, 255, 255, 0.2)' }}
                       style={{
-                        padding: '6px 14px', borderRadius: '8px',
-                        fontSize: '13px', fontWeight: 500,
+                        padding: '8px 18px', borderRadius: '8px',
+                        fontSize: '14px', fontWeight: 500,
                         color: isActive ? '#f8fafc' : '#cbd5e1',
                         background: isActive ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.03)',
                         border: isActive ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(255, 255, 255, 0.06)',
