@@ -181,7 +181,7 @@ export default function HomePage() {
   const [email, setEmail] = useState('');
   const [joined, setJoined] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const bgImageRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const handler = () => setScrollY(window.scrollY);
@@ -190,13 +190,11 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    video.preload = 'auto';
+    const bgImage = bgImageRef.current;
+    if (!bgImage) return;
 
     let scrollFraction = 0;
-    let currentTime = 0;
+    let currentFraction = 0;
     let frameId = 0;
 
     const handleScroll = () => {
@@ -205,21 +203,15 @@ export default function HomePage() {
       scrollFraction = window.scrollY / scrollHeight;
     };
 
-    const updateVideoTime = () => {
-      // Dynamic duration check with fallback
-      const duration = (video.duration && isFinite(video.duration) && video.duration > 0)
-        ? video.duration
-        : 8;
-
-      const targetTime = scrollFraction * duration;
-      
+    const updateBgPosition = () => {
       // Smooth easing
-      currentTime += (targetTime - currentTime) * 0.08;
+      currentFraction += (scrollFraction - currentFraction) * 0.08;
       
-      const clampedTime = Math.max(0, Math.min(duration - 0.02, currentTime));
-      video.currentTime = clampedTime;
+      // Since image height is 150vh, we translate vertically from 0 to -50vh
+      const translateY = currentFraction * -50;
+      bgImage.style.transform = `translate3d(0, ${translateY}vh, 0)`;
       
-      frameId = requestAnimationFrame(updateVideoTime);
+      frameId = requestAnimationFrame(updateBgPosition);
     };
 
     // Calculate initial values
@@ -227,7 +219,7 @@ export default function HomePage() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleScroll);
-    frameId = requestAnimationFrame(updateVideoTime);
+    frameId = requestAnimationFrame(updateBgPosition);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -321,26 +313,24 @@ export default function HomePage() {
   return (
     <div style={{ background: '#030712', minHeight: '100vh', overflowX: 'hidden', position: 'relative' }}>
 
-      {/* Fixed Background Video (linked to scroll) */}
-      <video
-        ref={videoRef}
-        muted
-        playsInline
-        preload="auto"
+      {/* Fixed Background Image (linked to scroll) */}
+      <img
+        ref={bgImageRef}
+        src="/skyscrapers.png"
+        alt="Skyscrapers Background"
         style={{
           position: 'fixed',
           top: 0,
           left: 0,
           width: '100vw',
-          height: '100vh',
+          height: '150vh', // 50% taller to allow vertical panning
           objectFit: 'cover',
           zIndex: 1,
-          opacity: 0.16,
+          opacity: 0.12, // Subtle blend with dark background
           pointerEvents: 'none',
+          willChange: 'transform',
         }}
-      >
-        <source src="/A_premium_slow_moving_abstrac.mp4" type="video/mp4" />
-      </video>
+      />
 
       {/* Page Content wrapper */}
       <div style={{ position: 'relative', zIndex: 10 }}>
