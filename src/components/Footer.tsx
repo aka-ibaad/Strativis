@@ -1,7 +1,8 @@
-import Link from 'next/link';
-import { Zap, Mail, MapPin, Phone } from 'lucide-react';
+'use client';
 
-// Custom inline SVG icons for social brands to prevent Lucide version discrepancies
+import Link from 'next/link';
+import { Mail, Phone } from 'lucide-react';
+
 const InstagramIcon = ({ size = 16 }: { size?: number }) => (
   <svg width={size} height={size} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
     <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
@@ -21,14 +22,10 @@ const footerLinks = {
     { label: 'Home', href: '/' },
     { label: 'Who We Are', href: '/#who-we-are' },
     { label: 'What We Do', href: '/#what-we-do' },
-    { label: 'Proof Points', href: '/#proof-points' },
-    { label: 'Our Team', href: '/#our-team' },
-    { label: 'Contact', href: '/#contact' },
   ],
   services: [
     { label: 'Fractional HR Solutions', href: '/#what-we-do' },
     { label: 'Talent Acquisition', href: '/#what-we-do' },
-    { label: 'People Team Leadership', href: '/#what-we-do' },
   ],
   legal: [
     { label: 'Privacy Policy', href: '#' },
@@ -37,61 +34,74 @@ const footerLinks = {
 };
 
 export default function Footer() {
+  const triggerAiChat = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.dispatchEvent(new CustomEvent('open-ai-chat'));
+  };
+
   return (
     <footer style={{
       background: '#030712',
-      borderTop: '1px solid rgba(148, 163, 184, 0.08)',
-      padding: '80px 24px 32px',
+      borderTop: '1px solid rgba(255, 255, 255, 0.05)',
+      padding: '48px 24px 24px',
     }}>
       <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
         {/* Top section */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '48px',
-          marginBottom: '64px',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gap: '32px',
+          marginBottom: '40px',
         }}>
           {/* Brand */}
           <div style={{ gridColumn: 'span 1' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
               <div style={{
-                width: 36, height: 36,
-                background: 'linear-gradient(135deg, #10b981, #06b6d4)',
-                borderRadius: '10px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 0 20px rgba(16, 185, 129, 0.3)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                justifyContent: 'center',
+                gap: '4px',
               }}>
-                <Zap size={18} color="#fff" fill="#fff" />
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#f8fafc' }} />
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#f8fafc' }} />
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#f8fafc' }} />
+                </div>
+                <span style={{
+                  fontSize: '11px',
+                  fontWeight: 900,
+                  letterSpacing: '0.2em',
+                  color: '#f8fafc',
+                  textTransform: 'uppercase',
+                  lineHeight: 1,
+                  marginRight: '-0.2em',
+                }}>Strativis</span>
               </div>
-              <span style={{
-                fontSize: '18px', fontWeight: 800,
-                background: 'linear-gradient(135deg, #f8fafc, #94a3b8)',
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-              }}>Strativis</span>
             </div>
-            <p style={{ color: '#64748b', fontSize: '14px', lineHeight: 1.7, maxWidth: '260px', marginBottom: '24px' }}>
-              STRATIVIS is a boutique, founder-led HR consultancy built by two experienced executives who&apos;ve led people strategy in high-growth environments.
+            <p style={{ color: '#64748b', fontSize: '13px', lineHeight: 1.6, maxWidth: '240px', marginBottom: '16px' }}>
+              Boutique, founder-led HR consultancy built by experienced executives.
             </p>
-            <div style={{ display: 'flex', gap: '12px' }}>
+            <div style={{ display: 'flex', gap: '10px' }}>
               {[
                 { icon: InstagramIcon, href: 'https://instagram.com/strativis_hr_consulting', label: 'Instagram' },
-                { icon: Linkedin, href: '#', label: 'LinkedIn' },
+                { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
               ].map(({ icon: Icon, href, label }) => (
                 <Link
                   key={label}
                   href={href}
                   aria-label={label}
-                  target={label === 'Instagram' ? '_blank' : undefined}
+                  target="_blank"
                   rel="noopener noreferrer"
                   style={{
-                    width: 36, height: 36, borderRadius: '8px',
-                    background: 'rgba(148, 163, 184, 0.06)',
-                    border: '1px solid rgba(148, 163, 184, 0.1)',
+                    width: 32, height: 32, borderRadius: '6px',
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(255, 255, 255, 0.06)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: '#64748b', textDecoration: 'none', transition: 'all 0.2s',
+                    color: '#94a3b8', textDecoration: 'none', transition: 'all 0.2s',
                   }}
                 >
-                  <Icon size={16} />
+                  <Icon size={14} />
                 </Link>
               ))}
             </div>
@@ -99,11 +109,11 @@ export default function Footer() {
 
           {/* Company Navigation */}
           <div>
-            <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#f8fafc', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '16px' }}>Navigation</h3>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#f8fafc', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '12px' }}>Navigation</h3>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {footerLinks.company.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} style={{ color: '#64748b', fontSize: '14px', textDecoration: 'none', transition: 'color 0.2s' }}>
+                  <Link href={link.href} style={{ color: '#64748b', fontSize: '13px', textDecoration: 'none', transition: 'color 0.2s' }}>
                     {link.label}
                   </Link>
                 </li>
@@ -113,11 +123,11 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#f8fafc', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '16px' }}>Solutions</h3>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#f8fafc', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '12px' }}>Solutions</h3>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {footerLinks.services.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} style={{ color: '#64748b', fontSize: '14px', textDecoration: 'none', transition: 'color 0.2s' }}>
+                  <Link href={link.href} style={{ color: '#64748b', fontSize: '13px', textDecoration: 'none', transition: 'color 0.2s' }}>
                     {link.label}
                   </Link>
                 </li>
@@ -125,33 +135,62 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Support section */}
+          <div>
+            <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#f8fafc', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '12px' }}>Support</h3>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <li>
+                <a
+                  href="#"
+                  onClick={triggerAiChat}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    color: '#10b981',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                    padding: '4px 10px',
+                    borderRadius: '4px',
+                    background: 'rgba(16, 185, 129, 0.08)',
+                    border: '1px solid rgba(16, 185, 129, 0.15)',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Chat with AI Bot
+                </a>
+              </li>
+            </ul>
+          </div>
+
           {/* Contact */}
           <div>
-            <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#f8fafc', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '16px' }}>Contact</h3>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <li style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                <Mail size={14} color="#10b981" style={{ flexShrink: 0 }} />
-                <a href="mailto:Info@strativis.io" style={{ color: '#64748b', fontSize: '14px', textDecoration: 'none' }}>Info@strativis.io</a>
+            <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#f8fafc', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '12px' }}>Contact</h3>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <li style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <Mail size={12} color="#10b981" style={{ flexShrink: 0 }} />
+                <a href="mailto:Info@strativis.io" style={{ color: '#64748b', fontSize: '13px', textDecoration: 'none' }}>Info@strativis.io</a>
               </li>
-              <li style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                <Phone size={14} color="#10b981" style={{ flexShrink: 0 }} />
-                <a href="tel:3313358691" style={{ color: '#64748b', fontSize: '14px', textDecoration: 'none' }}>331-335-8691</a>
+              <li style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <Phone size={12} color="#10b981" style={{ flexShrink: 0 }} />
+                <a href="tel:3313358691" style={{ color: '#64748b', fontSize: '13px', textDecoration: 'none' }}>331-335-8691</a>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Divider */}
-        <div style={{ height: '1px', background: 'rgba(148, 163, 184, 0.08)', marginBottom: '32px' }} />
+        <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.05)', marginBottom: '20px' }} />
 
         {/* Bottom */}
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-          <p style={{ color: '#64748b', fontSize: '13px' }}>
+          <p style={{ color: '#64748b', fontSize: '12px' }}>
             © {new Date().getFullYear()} Strativis. All rights reserved.
           </p>
-          <div style={{ display: 'flex', gap: '24px' }}>
+          <div style={{ display: 'flex', gap: '20px' }}>
             {footerLinks.legal.map((link) => (
-              <Link key={link.label} href={link.href} style={{ color: '#64748b', fontSize: '13px', textDecoration: 'none' }}>
+              <Link key={link.label} href={link.href} style={{ color: '#64748b', fontSize: '12px', textDecoration: 'none' }}>
                 {link.label}
               </Link>
             ))}

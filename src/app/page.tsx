@@ -183,10 +183,34 @@ export default function HomePage() {
   const [scrollY, setScrollY] = useState(0);
   const bgImageRef = useRef<HTMLImageElement>(null);
 
+  // Service Inquiry Modal States
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [inquirySubmitted, setInquirySubmitted] = useState(false);
+  const [inquiryForm, setInquiryForm] = useState({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    service: 'Fractional HR Solutions',
+    message: ''
+  });
+
+  // AI Chat Bot Widget States
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatInput, setChatInput] = useState('');
+  const [chatMessages, setChatMessages] = useState<Array<{ sender: 'user' | 'bot'; text: string }>>([
+    { sender: 'bot', text: "Hello! Welcome to Strativis. I'm your AI HR assistant. How can I help you today?" }
+  ]);
+
   useEffect(() => {
     const handler = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handler, { passive: true });
     return () => window.removeEventListener('scroll', handler);
+  }, []);
+
+  useEffect(() => {
+    const handleOpenChat = () => setIsChatOpen(true);
+    window.addEventListener('open-ai-chat', handleOpenChat);
+    return () => window.removeEventListener('open-ai-chat', handleOpenChat);
   }, []);
 
   useEffect(() => {
@@ -436,6 +460,7 @@ export default function HomePage() {
           >
             <motion.a
               href="#contact"
+              onClick={(e) => { e.preventDefault(); setIsModalOpen(true); }}
               whileHover={{ scale: 1.04, boxShadow: '0 0 40px rgba(16,185,129,0.4)' }}
               whileTap={{ scale: 0.97 }}
               style={{
@@ -950,6 +975,374 @@ export default function HomePage() {
           </div>
         </motion.div>
       </Section>
+
+      {/* Service Inquiry Modal */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9999,
+              background: 'rgba(3, 7, 18, 0.8)',
+              backdropFilter: 'blur(12px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
+            }}
+            onClick={() => setIsModalOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                width: '100%',
+                maxWidth: '600px',
+                background: 'rgba(15, 23, 42, 0.95)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '24px',
+                padding: '32px',
+                position: 'relative',
+                boxShadow: '0 24px 64px rgba(0, 0, 0, 0.5)',
+                maxHeight: '90vh',
+                overflowY: 'auto',
+              }}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setIsModalOpen(false)}
+                style={{
+                  position: 'absolute',
+                  top: '20px',
+                  right: '20px',
+                  background: 'rgba(255,255,255,0.05)',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '36px',
+                  height: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#f8fafc',
+                  cursor: 'pointer',
+                  fontSize: '18px',
+                  transition: 'background 0.2s',
+                }}
+              >
+                ✕
+              </button>
+
+              <h2 style={{
+                fontSize: '28px',
+                fontWeight: 800,
+                color: '#22d3ee', // Cyan tone
+                marginBottom: '8px',
+                letterSpacing: '-0.02em',
+              }}>Service Inquiry</h2>
+              
+              <p style={{
+                fontSize: '14px',
+                color: '#94a3b8',
+                lineHeight: 1.6,
+                marginBottom: '24px',
+              }}>
+                Fill in the form below to let us know which service you&apos;re interested in and how we can help - we&apos;ll get back to you as soon as possible.
+              </p>
+
+              {inquirySubmitted ? (
+                <div style={{ textAlign: 'center', padding: '40px 0' }}>
+                  <div style={{ fontSize: '48px', marginBottom: '16px', color: '#22d3ee' }}>✓</div>
+                  <h3 style={{ color: '#f8fafc', fontSize: '20px', fontWeight: 700, marginBottom: '8px' }}>Request Sent!</h3>
+                  <p style={{ color: '#94a3b8', fontSize: '14px' }}>Thank you for reaching out. We will get back to you shortly.</p>
+                </div>
+              ) : (
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  setInquirySubmitted(true);
+                  setTimeout(() => {
+                    setIsModalOpen(false);
+                    setInquirySubmitted(false);
+                    setInquiryForm({ firstName: '', lastName: '', phone: '', service: 'Fractional HR Solutions', message: '' });
+                  }, 2000);
+                }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#cbd5e1' }}>First name *</label>
+                      <input
+                        type="text"
+                        required
+                        value={inquiryForm.firstName}
+                        onChange={(e) => setInquiryForm({ ...inquiryForm, firstName: e.target.value })}
+                        style={{
+                          background: 'rgba(255,255,255,0.03)',
+                          border: '1px solid rgba(255,255,255,0.08)',
+                          borderRadius: '12px',
+                          padding: '12px 16px',
+                          color: '#f8fafc',
+                          outline: 'none',
+                          fontSize: '14px',
+                        }}
+                      />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#cbd5e1' }}>Last name *</label>
+                      <input
+                        type="text"
+                        required
+                        value={inquiryForm.lastName}
+                        onChange={(e) => setInquiryForm({ ...inquiryForm, lastName: e.target.value })}
+                        style={{
+                          background: 'rgba(255,255,255,0.03)',
+                          border: '1px solid rgba(255,255,255,0.08)',
+                          borderRadius: '12px',
+                          padding: '12px 16px',
+                          color: '#f8fafc',
+                          outline: 'none',
+                          fontSize: '14px',
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <label style={{ fontSize: '13px', fontWeight: 600, color: '#cbd5e1' }}>Phone number *</label>
+                    <input
+                      type="tel"
+                      required
+                      value={inquiryForm.phone}
+                      onChange={(e) => setInquiryForm({ ...inquiryForm, phone: e.target.value })}
+                      placeholder="+1 (555) 000-0000"
+                      style={{
+                        background: 'rgba(255,255,255,0.03)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        borderRadius: '12px',
+                        padding: '12px 16px',
+                        color: '#f8fafc',
+                        outline: 'none',
+                        fontSize: '14px',
+                      }}
+                    />
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <label style={{ fontSize: '13px', fontWeight: 600, color: '#cbd5e1' }}>Which service are you interested in?</label>
+                    <select
+                      value={inquiryForm.service}
+                      onChange={(e) => setInquiryForm({ ...inquiryForm, service: e.target.value })}
+                      style={{
+                        background: 'rgba(15, 23, 42, 0.95)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        borderRadius: '12px',
+                        padding: '12px 16px',
+                        color: '#f8fafc',
+                        outline: 'none',
+                        fontSize: '14px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <option value="Fractional HR Solutions">Fractional HR Solutions</option>
+                      <option value="Talent Acquisition">Talent Acquisition</option>
+                      <option value="Fractional People Team Leadership">Fractional People Team Leadership</option>
+                      <option value="HR Strategy & Transformation">HR Strategy & Transformation</option>
+                    </select>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <label style={{ fontSize: '13px', fontWeight: 600, color: '#cbd5e1' }}>Add a message or tell us more about what you need</label>
+                    <textarea
+                      rows={4}
+                      value={inquiryForm.message}
+                      onChange={(e) => setInquiryForm({ ...inquiryForm, message: e.target.value })}
+                      style={{
+                        background: 'rgba(255,255,255,0.03)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        borderRadius: '12px',
+                        padding: '12px 16px',
+                        color: '#f8fafc',
+                        outline: 'none',
+                        fontSize: '14px',
+                        resize: 'vertical',
+                      }}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    style={{
+                      background: '#22d3ee',
+                      color: '#0f172a',
+                      fontWeight: 700,
+                      fontSize: '15px',
+                      padding: '14px',
+                      borderRadius: '12px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      transition: 'background 0.2s',
+                      marginTop: '8px',
+                    }}
+                  >
+                    Send Request
+                  </button>
+                </form>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* AI Chat Bot Widget */}
+      <div style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 99999 }}>
+        {/* Toggle Button */}
+        <motion.button
+          onClick={() => setIsChatOpen(!isChatOpen)}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          style={{
+            width: '56px',
+            height: '56px',
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg,#10b981,#06b6d4)',
+            border: 'none',
+            boxShadow: '0 8px 32px rgba(16, 185, 129, 0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#fff',
+            cursor: 'pointer',
+            fontSize: '24px',
+          }}
+        >
+          {isChatOpen ? '✕' : '💬'}
+        </motion.button>
+
+        {/* Chat window */}
+        <AnimatePresence>
+          {isChatOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.95 }}
+              style={{
+                position: 'absolute',
+                bottom: '72px',
+                right: 0,
+                width: '320px',
+                height: '400px',
+                background: 'rgba(15, 23, 42, 0.95)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '16px',
+                boxShadow: '0 12px 40px rgba(0, 0, 0, 0.5)',
+                backdropFilter: 'blur(12px)',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+              }}
+            >
+              {/* Header */}
+              <div style={{
+                padding: '14px 16px',
+                background: 'linear-gradient(135deg,rgba(16,185,129,0.15),rgba(6,182,212,0.15))',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981' }} />
+                <span style={{ fontSize: '14px', fontWeight: 700, color: '#f8fafc' }}>Strativis AI Support</span>
+              </div>
+
+              {/* Messages */}
+              <div style={{
+                flex: 1,
+                padding: '16px',
+                overflowY: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+              }}>
+                {chatMessages.map((msg, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
+                      background: msg.sender === 'user' ? '#10b981' : 'rgba(255,255,255,0.05)',
+                      color: msg.sender === 'user' ? '#0f172a' : '#cbd5e1',
+                      padding: '8px 12px',
+                      borderRadius: msg.sender === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
+                      fontSize: '13px',
+                      lineHeight: 1.4,
+                      maxWidth: '85%',
+                    }}
+                  >
+                    {msg.text}
+                  </div>
+                ))}
+              </div>
+
+              {/* Input Form */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (!chatInput.trim()) return;
+                  const newMsg = { sender: 'user', text: chatInput };
+                  setChatMessages(prev => [...prev, newMsg]);
+                  setChatInput('');
+                  setTimeout(() => {
+                    setChatMessages(prev => [...prev, {
+                      sender: 'bot',
+                      text: `Thanks for reaching out! A member of the Strativis team will review your inquiry shortly. If you need immediate assistance, please call us at 331-335-8691.`
+                    }]);
+                  }, 1000);
+                }}
+                style={{
+                  padding: '12px',
+                  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                  display: 'flex',
+                  gap: '8px',
+                }}
+              >
+                <input
+                  type="text"
+                  placeholder="Type a message..."
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  style={{
+                    flex: 1,
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: '8px',
+                    padding: '8px 12px',
+                    color: '#f8fafc',
+                    fontSize: '13px',
+                    outline: 'none',
+                  }}
+                />
+                <button
+                  type="submit"
+                  style={{
+                    background: '#10b981',
+                    border: 'none',
+                    borderRadius: '8px',
+                    color: '#0f172a',
+                    fontWeight: 700,
+                    fontSize: '12px',
+                    padding: '8px 12px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Send
+                </button>
+              </form>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       </div>
     </div>
