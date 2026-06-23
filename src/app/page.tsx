@@ -288,6 +288,26 @@ export default function HomePage() {
           paddingTop: 80,
         }}
       >
+        {/* Background Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            zIndex: 0,
+            opacity: 0.3,
+            pointerEvents: 'none',
+          }}
+        >
+          <source src="/A_premium_slow_moving_abstrac.mp4" type="video/mp4" />
+        </video>
         {/* Animated gradient orbs */}
         <div style={{
           position: 'absolute', inset: 0,
