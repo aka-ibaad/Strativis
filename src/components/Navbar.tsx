@@ -40,14 +40,10 @@ export default function Navbar() {
           left: 0,
           right: 0,
           zIndex: 1000,
-          backdropFilter: scrolled ? 'blur(20px)' : 'blur(0px)',
-          WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'blur(0px)',
-          background: scrolled
-            ? 'rgba(3, 7, 18, 0.85)'
-            : 'transparent',
-          borderBottom: scrolled
-            ? '1px solid rgba(148, 163, 184, 0.1)'
-            : '1px solid transparent',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          background: 'rgba(3, 7, 18, 0.6)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           transition: 'all 0.4s ease',
         }}
       >
@@ -83,21 +79,22 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Nav */}
-            <nav style={{ display: 'flex', alignItems: 'center', gap: '4px' }} className="hidden md:flex">
+            <nav style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="hidden md:flex">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (
                   <Link key={link.href} href={link.href} style={{ textDecoration: 'none' }}>
                     <motion.div
-                      whileHover={{ y: -1 }}
+                      whileHover={{ y: -1, background: 'rgba(255, 255, 255, 0.1)', borderColor: 'rgba(255, 255, 255, 0.2)' }}
                       style={{
-                        padding: '8px 16px', borderRadius: '8px',
-                        fontSize: '14px', fontWeight: 500,
-                        color: isActive ? '#f8fafc' : '#94a3b8',
-                        background: isActive ? 'rgba(99,102,241,0.15)' : 'transparent',
-                        border: isActive ? '1px solid rgba(99,102,241,0.3)' : '1px solid transparent',
+                        padding: '6px 14px', borderRadius: '8px',
+                        fontSize: '13px', fontWeight: 500,
+                        color: isActive ? '#f8fafc' : '#cbd5e1',
+                        background: isActive ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.03)',
+                        border: isActive ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(255, 255, 255, 0.06)',
                         transition: 'all 0.2s ease',
                         cursor: 'pointer',
+                        backdropFilter: 'blur(4px)',
                       }}
                     >
                       {link.label}
