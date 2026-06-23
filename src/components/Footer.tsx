@@ -180,6 +180,64 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Newsletter subscribe block in the footer */}
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.02)',
+          border: '1px solid rgba(255, 255, 255, 0.05)',
+          borderRadius: '16px',
+          padding: '24px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+          gap: '12px',
+          maxWidth: '560px',
+          margin: '0 auto 40px auto',
+        }}>
+          <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#f8fafc' }}>
+            People &amp; HR Insights, Monthly.
+          </h4>
+          <p style={{ fontSize: '12px', color: '#94a3b8', lineHeight: 1.5, maxWidth: '400px' }}>
+            Join our list to receive curated insights on HR strategy, talent trends, and the future of work — straight from practitioners, not theorists.
+          </p>
+          
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            alert("Thank you for subscribing to Strativis Insights!");
+          }} style={{ display: 'flex', gap: '8px', width: '100%', maxWidth: '380px', marginTop: '4px' }}>
+            <input
+              type="email"
+              required
+              placeholder="Your email address"
+              style={{
+                flex: 1,
+                background: 'rgba(3, 7, 18, 0.6)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '8px',
+                padding: '8px 12px',
+                color: '#f8fafc',
+                fontSize: '13px',
+                outline: 'none',
+              }}
+            />
+            <button
+              type="submit"
+              style={{
+                background: 'linear-gradient(135deg,#10b981,#06b6d4)',
+                color: '#fff',
+                fontSize: '12px',
+                fontWeight: 700,
+                border: 'none',
+                borderRadius: '8px',
+                padding: '8px 16px',
+                cursor: 'pointer',
+              }}
+            >
+              Subscribe
+            </button>
+          </form>
+        </div>
+
         {/* Divider */}
         <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.05)', marginBottom: '20px' }} />
 
