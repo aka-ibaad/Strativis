@@ -86,15 +86,15 @@ function PillarCard({
     <motion.div
       variants={fadeUp}
       custom={index}
-      whileHover={{ y: -8, boxShadow: '0 24px 60px rgba(16,185,129,0.15)' }}
+      whileHover={{ y: -8, boxShadow: '0 24px 60px rgba(255,255,255,0.08)' }}
       style={{
         padding: '36px 32px',
         borderRadius: 20,
-        background: 'rgba(15,23,42,0.7)',
-        backdropFilter: 'blur(16px)',
-        border: '1px solid rgba(148,163,184,0.1)',
+        background: 'rgba(255, 255, 255, 0.03)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
         display: 'flex', flexDirection: 'column', gap: 16,
-        transition: 'border-color 0.3s ease',
+        transition: 'all 0.3s ease',
       }}
     >
       <div style={{
@@ -120,9 +120,9 @@ function StatCard({ value, label, index }: { value: string; label: string; index
       whileHover={{ scale: 1.04 }}
       style={{
         padding: '32px 24px', borderRadius: 16, textAlign: 'center',
-        background: 'rgba(15,23,42,0.6)',
-        border: '1px solid rgba(148,163,184,0.08)',
-        backdropFilter: 'blur(12px)',
+        background: 'rgba(255, 255, 255, 0.02)',
+        border: '1px solid rgba(255, 255, 255, 0.06)',
+        backdropFilter: 'blur(8px)',
       }}
     >
       <div style={{
@@ -147,9 +147,9 @@ function TeamCard({ name, role, bio, gradient, index }: {
       whileHover={{ y: -6 }}
       style={{
         borderRadius: 20, overflow: 'hidden',
-        background: 'rgba(15,23,42,0.8)',
-        border: '1px solid rgba(148,163,184,0.1)',
-        backdropFilter: 'blur(16px)',
+        background: 'rgba(255, 255, 255, 0.03)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        backdropFilter: 'blur(10px)',
       }}
     >
       <div style={{
@@ -195,45 +195,41 @@ export default function HomePage() {
 
     video.preload = 'auto';
 
-    let targetTime = 0;
+    let scrollFraction = 0;
     let currentTime = 0;
     let frameId = 0;
 
     const handleScroll = () => {
       const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
       if (scrollHeight <= 0) return;
-      const scrollFraction = window.scrollY / scrollHeight;
-      if (video.duration) {
-        targetTime = scrollFraction * video.duration;
-      }
+      scrollFraction = window.scrollY / scrollHeight;
     };
 
     const updateVideoTime = () => {
-      // Lerp logic for frame-by-frame smoothing
+      // Dynamic duration check with fallback
+      const duration = (video.duration && isFinite(video.duration) && video.duration > 0)
+        ? video.duration
+        : 8;
+
+      const targetTime = scrollFraction * duration;
+      
+      // Smooth easing
       currentTime += (targetTime - currentTime) * 0.08;
-      if (video.duration) {
-        const clampedTime = Math.max(0, Math.min(video.duration - 0.02, currentTime));
-        video.currentTime = clampedTime;
-      }
+      
+      const clampedTime = Math.max(0, Math.min(duration - 0.02, currentTime));
+      video.currentTime = clampedTime;
+      
       frameId = requestAnimationFrame(updateVideoTime);
     };
 
-    const handleLoadedMetadata = () => {
-      handleScroll();
-    };
+    // Calculate initial values
+    handleScroll();
 
-    video.addEventListener('loadedmetadata', handleLoadedMetadata);
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleScroll);
-    
-    if (video.duration) {
-      handleScroll();
-    }
-    
     frameId = requestAnimationFrame(updateVideoTime);
 
     return () => {
-      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
       cancelAnimationFrame(frameId);
@@ -409,15 +405,7 @@ export default function HomePage() {
           maxWidth: 960, margin: '0 auto', padding: '0 24px',
           textAlign: 'center',
         }}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <PillBadge>
-              <Star size={10} /> Boutique · Founder-Led · Results-Driven
-            </PillBadge>
-          </motion.div>
+
 
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -548,10 +536,10 @@ export default function HomePage() {
             }} />
             <div style={{
               position: 'relative',
-              background: 'rgba(15,23,42,0.9)',
-              border: '1px solid rgba(148,163,184,0.12)',
+              background: 'rgba(255, 255, 255, 0.04)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
               borderRadius: 24, padding: 40,
-              backdropFilter: 'blur(20px)',
+              backdropFilter: 'blur(10px)',
             }}>
               {[
                 { icon: '🚀', title: 'Move Quickly', sub: 'We eliminate complexity and get things done.' },
@@ -584,7 +572,7 @@ export default function HomePage() {
       {/* ════════════════════════════════════════════════════════════ */}
       <Section
         id="why-choose"
-        style={{ padding: '100px 24px', background: 'rgba(15,23,42,0.4)' }}
+        style={{ padding: '100px 24px', background: 'rgba(255, 255, 255, 0.01)' }}
       >
         <div style={{ maxWidth: 1160, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 64 }}>
@@ -655,7 +643,7 @@ export default function HomePage() {
       {/* ════════════════════════════════════════════════════════════ */}
       <Section
         id="what-we-do"
-        style={{ padding: '100px 24px', background: 'rgba(15,23,42,0.35)' }}
+        style={{ padding: '100px 24px', background: 'rgba(255, 255, 255, 0.01)' }}
       >
         <div style={{ maxWidth: 1160, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 64 }}>
@@ -676,13 +664,13 @@ export default function HomePage() {
                 key={s.title}
                 variants={fadeUp}
                 custom={i * 0.5}
-                whileHover={{ y: -6, borderColor: 'rgba(16,185,129,0.3)' }}
+                whileHover={{ y: -6, borderColor: 'rgba(16,185,129,0.3)', boxShadow: '0 24px 60px rgba(255,255,255,0.08)' }}
                 style={{
                   padding: '28px 28px', borderRadius: 16,
-                  background: 'rgba(15,23,42,0.7)',
-                  border: '1px solid rgba(148,163,184,0.08)',
-                  backdropFilter: 'blur(12px)',
-                  transition: 'border-color 0.3s',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.06)',
+                  backdropFilter: 'blur(8px)',
+                  transition: 'all 0.3s',
                 }}
               >
                 <div style={{
@@ -762,7 +750,7 @@ export default function HomePage() {
       {/* ════════════════════════════════════════════════════════════ */}
       <Section
         id="our-team"
-        style={{ padding: '100px 24px', background: 'rgba(15,23,42,0.4)' }}
+        style={{ padding: '100px 24px', background: 'rgba(255, 255, 255, 0.01)' }}
       >
         <div style={{ maxWidth: 1160, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 64 }}>
@@ -860,7 +848,7 @@ export default function HomePage() {
       {/* ════════════════════════════════════════════════════════════ */}
       <Section
         id="contact"
-        style={{ padding: '100px 24px', background: 'rgba(15,23,42,0.4)' }}
+        style={{ padding: '100px 24px', background: 'rgba(255, 255, 255, 0.01)' }}
       >
         <div style={{ maxWidth: 1040, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 64 }}>
@@ -909,12 +897,12 @@ export default function HomePage() {
                 whileHover={{ y: -6, boxShadow: `0 16px 40px ${ch.color}22` }}
                 style={{
                   padding: '32px 28px', borderRadius: 16,
-                  background: 'rgba(15,23,42,0.7)',
-                  border: '1px solid rgba(148,163,184,0.08)',
-                  backdropFilter: 'blur(12px)',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.06)',
+                  backdropFilter: 'blur(8px)',
                   textDecoration: 'none',
                   display: 'flex', flexDirection: 'column', gap: 12,
-                  transition: 'border-color 0.3s',
+                  transition: 'all 0.3s',
                 }}
               >
                 <div style={{
