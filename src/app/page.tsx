@@ -431,29 +431,12 @@ export default function HomePage() {
             <span style={{
               background: 'linear-gradient(135deg,#6366f1 0%,#8b5cf6 40%,#10b981 100%)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-              fontSize: 'clamp(32px, 5.8vw, 72px)',
+              fontSize: 'clamp(24px, 4.5vw, 48px)',
               fontWeight: 900,
             }}>
               Fractional HR &amp; Talent Delivery
             </span>
           </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              fontSize: 'clamp(16px,2vw,19px)',
-              color: '#94a3b8',
-              lineHeight: 1.75,
-              maxWidth: 700, margin: '0 auto 44px',
-            }}
-          >
-            STRATIVIS is a boutique, founder-led HR consultancy built by two experienced executives
-            who&apos;ve led people strategy in high-growth, high-expectation environments. We move quickly,
-            eliminate complexity, and deliver work that actually makes an impact.{' '}
-            <strong style={{ color: '#f8fafc' }}>For us, excellence isn&apos;t optional.</strong>
-          </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
